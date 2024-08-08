@@ -3,7 +3,8 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #ECFFE6;
+    background-color: #f8f9fa;
+
 }
 
 .login {
@@ -19,14 +20,17 @@
     font-weight: bold;
     color: #333;
 }
+
 .btnSubmit {
     width: 100%;
     padding: 0.75rem;
     background-color: #007bff;
+
     &:hover {
         background-color: #0056b3;
         border-color: #4e83bd;
     }
+
     color: white;
 }
 
@@ -35,3 +39,7 @@
     color: #333;
 }
 
+.textLogin {
+    color: black;
+    font-weight: 600;
+}

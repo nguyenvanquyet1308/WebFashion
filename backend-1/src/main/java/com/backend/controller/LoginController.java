@@ -2,6 +2,7 @@ package com.backend.controller;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -75,7 +76,7 @@ public class LoginController {
 
 	@GetMapping("/getCurrent")
 	public ResponseEntity<?> getCurrent(@CookieValue(name = "jwtToken", required = false) String jwtToken) {
-		System.out.println("check point get user current ....");
+		System.out.println("check cookie từ client ....");
 		System.out.println("token: " + jwtToken);
 		if (jwtToken == null || jwtToken.isEmpty()) {
 			System.out.println("khách hàng ko tồn tại");
@@ -87,10 +88,10 @@ public class LoginController {
 			System.out.println("email: " + userEmail);
 			Optional<Customer> itemCustomer = customerDAO.findByEmail(userEmail);
 			Customer customer = itemCustomer.get();
-            System.out.println(customer.getCustomerRoles());
+			System.out.println(customer.getCustomerRoles());
 			if (customer != null) {
 				return ResponseEntity.ok(customer);
-				
+
 			} else {
 				System.out.println("khách hàng ko tồn tại1");
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Khách hàng không tồn tại");
@@ -155,12 +156,12 @@ public class LoginController {
 					.authenticate(new UsernamePasswordAuthenticationToken(customer.getEmail(), customer.getPassword()));
 			String token = jwtutil.generateToken(customer.getEmail());
 			Optional<Customer> item = customerDAO.findByEmail(customer.getEmail());
-
+			System.out.println(customer.getEmail());
 			if (item.isPresent()) {
 				Customer itemCustomer = item.get();
 				Cookie jwtCookie = new Cookie("jwtToken", token);
-				jwtCookie.setHttpOnly(true);
-				jwtCookie.setSecure(true); // Chỉ hoạt động với HTTPS, nếu không sử dụng HTTPS, có thể bỏ dòng này
+				//jwtCookie.setHttpOnly(true);
+				jwtCookie.setSecure(true); 
 				jwtCookie.setPath("/");
 				jwtCookie.setMaxAge(24 * 60 * 60);
 				response.addCookie(jwtCookie);
@@ -183,4 +184,26 @@ public class LoginController {
 		}
 	}
 
+	@PostMapping("/register")
+	public ResponseEntity<?> Register(@RequestBody Customer customer) {
+		Customer item = customerDAO.save(customer);
+
+		return ResponseEntity.ok(item);
+
+	}
+	@GetMapping("/checkEmail/{email}")
+	public ResponseEntity<String> checkEmail(@PathVariable("email") String email) {
+	    Optional<Customer> customer = customerDAO.findByEmail(email);
+
+	    if (customer.isPresent()) {
+	        System.out.println(customer.get().getEmail());
+	        if (customer.get().getEmail().equals(email)) {
+	            System.out.println("Email đã tồn tại: " + email);
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email Đã tồn tại");
+	        }
+	    } else {
+		    System.out.println("ok rồi đó");
+	    }
+	    return ResponseEntity.ok("thành công");
+	}
 }

@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import customerReducer from './customerSlice'; // Đường dẫn đúng đến customerSlice
+import customerReducer from './customerSlice'; 
 
 export const store = configureStore({
     reducer: {
-        customer: customerReducer, // Đổi tên thành customer
+        customer: customerReducer, 
     },
 });
     

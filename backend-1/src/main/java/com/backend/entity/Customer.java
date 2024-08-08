@@ -3,15 +3,15 @@ package com.backend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.springframework.format.annotation.DateTimeFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,13 +27,14 @@ import jakarta.persistence.Transient;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "customers")
+@ToString(exclude = {"customerRoles", "orders"})
 public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer customerId;
 
-    private String username; // Đổi từ `name` thành `username`
+    private String username; 
     private String email;
     private String password;
 
@@ -50,6 +51,10 @@ public class Customer implements Serializable {
     @OneToMany(mappedBy = "customer")
     private List<CustomerRoles> customerRoles;
     
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer")
+    private List<Orders> orders;
+    
     @Transient
     private List<String> roleNames;
 
@@ -61,24 +66,4 @@ public class Customer implements Serializable {
         }
         return null;
     }
-    
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "customerId=" + customerId +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", registeredDate=" + registeredDate +
-                ", customerRoles=" + customerRoles +
-                '}';
-    }
-
-
-
-
-
-	
- 
-
 }

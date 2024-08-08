@@ -34,6 +34,7 @@
 		public ResponseEntity<?> ShowOrders() {
 			try {
 				List<Orders> itemOrders = ordersdao.findAll();
+				System.out.println(itemOrders);
 				return ResponseEntity.ok(itemOrders);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -83,6 +84,12 @@
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi Update orders");
 			}
 		}
+		@GetMapping("/showOrderByCustomer/{customerId}")
+		public ResponseEntity<?> showOrderByCustomer(@PathVariable Integer customerId) {
+			
+			return ResponseEntity.ok(ordersdao.findByCustomerCustomerId(customerId));
+		}
+
 		
 	
 	}

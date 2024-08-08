@@ -2,29 +2,35 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.scss";
 import { useDispatch } from "react-redux";
-import { loginCustomer } from "../../components/redux/apiRequest";
+import {loginStart} from "components/redux/customerSlice"
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [customer, setCustomer] = useState(null); 
     const navigate = useNavigate();
-    const dispath = useDispatch();
+    const dispatch =  useDispatch();
 
-    
-    const handleReduxlogin = (e) => {
-        const newCustomer={
-           email: email,
-           password: password
+    const handleLogin = () => {
+       dispatch(loginStart({
+        data : {
+            email: email,
+            password: password
+        },
+        callback : () => {
+            console.log("log sussess");
+            toast.success("Đăng nhập thành công !")
+            setTimeout(() => {
+                navigate("/")
+            }, 1000);
+        },
+        errorCallback: () =>{
+            toast.error("Tài khoản mật khẩu sai !")
         }
-        loginCustomer(newCustomer,dispath,navigate)
+       }))
     }
-
-
     // const handleCheckLogin = async (e) => {
     //     e.preventDefault();
 
@@ -50,8 +56,13 @@ const Login = () => {
     return (
         <>
             <div className="form">
+
                 <div className="login col-md-6">
-                    <form onSubmit={handleReduxlogin}>
+                <h3 className="text-center textLogin">Login</h3>
+<p>Nếu bạn đã có tài khoản, hãy đăng nhập để tích lũy điểm thành viên và nhận được những ưu đãi tốt hơn!
+</p>
+                    <div >
+
                         <div className="mb-3 mt-3">
                             <label htmlFor="email" className="form-label">Email:</label>
                             <input
@@ -80,19 +91,22 @@ const Login = () => {
                             </label>
                         </div>
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={()=> handleLogin()}
                             className="btnSubmit btn-primary"
                         >
                             Submit
                         </button>
                         <br />
-                        <a href="" className="dangky">Đăng ký?</a>
-
-                        <ToastContainer />
-                    </form>
+                        <div  class="d-flex justify-content-between">
+                     <Link to="/register">  <a href="" className="dangky">Đăng ký?</a></Link> 
+                     <Link to="/forgotPassword">  <a href="" className="forgotpassword text-end">Quên mật khẩu </a></Link>
+                     </div> 
+                    </div>
                 </div>
             </div>
 
+            <ToastContainer />
 
         </>
     );

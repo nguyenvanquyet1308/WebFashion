@@ -2,33 +2,39 @@
 import { useEffect, useState } from "react";
 import "./ShoppingCart.scss";
 import axios from "axios";
-import { ToastContainer,toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 const ShoppingCart = () => {
-
+    const navigate = useNavigate();
     const [ShoppingCart, setShoppingCart] = useState([]);
-    const customer =  useSelector((state) => state.customer.userInfo.data);
+    const customer = useSelector((state) => state.customer.userInfo.data);
     // console.log(cus);
-                                                               
+
+    useEffect(() => {
+        if (!customer) {
+            toast.warning("Bạn cần phải đăng nhập");
+            navigate("/login");
+        }
+    }, [customer, navigate]);
+
+
     useEffect(() => {
         const showCart = async () => {
             try {
-                  console.log("id cuar cusstomer o cart: "+customer.customerId);
-                const response = await axios.get("http://localhost:8080/api/user/cart/customer",{
-                    params: {customerId: customer.customerId}
+                console.log("id cuar cusstomer o cart: " + customer.customerId);
+                const response = await axios.get("http://localhost:8080/api/user/cart/customer", {
+                    params: { customerId: customer.customerId }
                 });
-              //  console.log("Cart data:", response.data)
+                //  console.log("Cart data:", response.data)
                 setShoppingCart(response.data);
-
-            } catch (error) {   
-                console.log("lỗi show cart: "+error);
-
+            } catch (error) {
+                console.log("lỗi show cart: " + error);
             }
         }
         showCart();
     }, [])
-    const handleDelete = async (id) =>{
+    const handleDelete = async (id) => {
         console.log(id);
         try {
             const response = await axios.delete(`http://localhost:8080/api/user/cart/delete/${id}`)
@@ -51,9 +57,9 @@ const ShoppingCart = () => {
                     quantity: itemToUpdate.quantity
                 });
                 toast.success("Update thành công")
-            
+
             } catch (error) {
-                console.log("lỗi update quantity "+error);
+                console.log("lỗi update quantity " + error);
             }
         }
     };
@@ -62,10 +68,9 @@ const ShoppingCart = () => {
     };
     const totalPrice = ShoppingCart.reduce((total, item) => total + item.product.unitPrice * item.quantity, 0);
 
-    
 
+    if (!customer) return null;
     return (<>
-
         <div class="container mt-3">
             <h2>Giỏ Hàng</h2>
             <table class="table table-hover mt-5">
@@ -83,12 +88,11 @@ const ShoppingCart = () => {
                         <tr key={index}>
                             <td>{item.product.productId}</td>
                             <td>{item.product.name}</td>
-                            <td>{ <input type="number" value={item.quantity} style={{width: "70px"}} onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))} /> }</td>
-                            <td>{formatCurrency(item.product.unitPrice * item.quantity) }</td>
-                            <td><button className="btn btn-primary" onClick={()=>handleUpdateQuantity(item.id)} >Update</button>     <button className="btn btn-danger ms-2" onClick={()=>handleDelete(item.id)}  >Delete</button> </td>
+                            <td>{<input type="number" value={item.quantity} style={{ width: "70px" }} onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))} />}</td>
+                            <td>{formatCurrency(item.product.unitPrice * item.quantity)}</td>
+                            <td><button className="btn btn-primary" onClick={() => handleUpdateQuantity(item.id)} >Update</button>     <button className="btn btn-danger ms-2" onClick={() => handleDelete(item.id)}  >Delete</button> </td>
                         </tr>
                     ))
-
                     }
                 </tbody>
             </table>
@@ -96,13 +100,11 @@ const ShoppingCart = () => {
                 <button className="btn btn-primary">Xóa tất cả sản phẩm </button>
             </div>
             <div className="total text-end">
-            <b>Tổng tiền: {formatCurrency(totalPrice)}</b>
+                <b>Tổng tiền: {formatCurrency(totalPrice)}</b>
             </div> <br />
-            <div className="text-end"><Link to="/paycart" ><button className="pay btn btn-info">Thanh toán ngay</button></Link></div>
-            
-
+            <div className="text-end "><Link to="/paycart" ><button className="pay btn btn-info " >Thanh toán ngay</button></Link></div>
         </div> <br /><br />
-  <ToastContainer></ToastContainer>
+        <ToastContainer></ToastContainer>
     </>)
 }
 export default ShoppingCart;

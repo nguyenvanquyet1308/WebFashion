@@ -1,12 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import $ from 'jquery'
 import '../home/HomePages.scss';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { getCurrent } from '../../components/apis/auth';
+import TruncateText from 'services/TruncateText';
 
 const HomePages = () => {
     const [products, setProducts] = useState([]);
@@ -15,7 +14,7 @@ const HomePages = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productId, setProductId] = useState('');
     const [quantity, setQuantity] = useState('');
-    const pageSize = 8;
+    const pageSize = 12;
     const customer = useSelector((state) => state.customer.userInfo.data)
 
     useEffect(() => {
@@ -45,9 +44,10 @@ const HomePages = () => {
         setSelectedProduct(product);
         setProductId(product.productId);
     };
+ 
 
     const handleAddCart = async () => {
-        console.log("dataa customer"+customer);
+        console.log("dataa customer" + customer);
 
         console.log(customer.customerId);
         try {
@@ -58,7 +58,7 @@ const HomePages = () => {
 
             }, {
                 headers: { 'Content-Type': 'application/json' },
-                 Authorization: `Bearer ${customer.token}`
+                Authorization: `Bearer ${customer.token}`
             });
             toast.success("Thêm sản phẩm thành công")
             console.log("Thêm sp thành công");
@@ -76,31 +76,27 @@ const HomePages = () => {
     return (
         <>
             <div>
-
-                <div id="demo" class="carousel slide" data-bs-ride="carousel">
-
+                <div id="carousel1" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-                        <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-                        <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+                        <button type="button" data-bs-target="#carousel1" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#carousel1" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#carousel1" data-bs-slide-to="2"></button>
                     </div>
-
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="./images/banner1.webp" alt="Los Angeles" class="d-block w-100"/>
+                            <img src="./images/banner2.webp" alt="Los Angeles" class="d-block w-100" />
                         </div>
                         <div class="carousel-item">
-                            <img src="./images/banner2.webp" alt="Chicago" class="d-block w-100"/>
+                            <img src="./images/banner1.webp" alt="Chicago" class="d-block w-100" />
                         </div>
                         <div class="carousel-item">
-                            <img src="./images/banner3.webp" alt="New York" class="d-block w-100"/>
+                            <img src="./images/banner3.webp" alt="New York" class="d-block w-100" />
                         </div>
                     </div>
-
-                    <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel1" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon"></span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel1" data-bs-slide="next">
                         <span class="carousel-control-next-icon"></span>
                     </button>
                 </div>
@@ -109,7 +105,8 @@ const HomePages = () => {
                 {products.map((product, index) => (
                     <div className="col-md-3 mt-5" key={index}>
                         <div className="card" style={{ minHeight: "400px" }}>
-                            <div className="card-header">{product.name}</div>
+                            <div className="productName"> <TruncateText text={product.name} maxLength={20} />  </div>
+                            <div className='text-end discount'> - {product.discount} %</div>
                             <div className="card-body">
                                 <img src={`http://localhost:8080/getimage/${product.image}`} alt="" style={{ height: "300px", width: "260px" }} />
                                 <div className='product-info'>
@@ -122,20 +119,22 @@ const HomePages = () => {
                                         Mua Ngay
                                     </button>
                                 </div>
-                                <p className="price mt-3">Giá: {formatCurrency(product.unitPrice)}</p>
+                                <div>
+                                    <p className="price mt-3">Giá hiện tại: {formatCurrency(product.unitPrice * (100 - (product.discount)) / 100)}</p><s className='giaGoc'>Giá gốc: {formatCurrency(product.unitPrice)} </s>
+                                </div>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
-            <div className="pagination-container">
+            <div className="pagination-container" >
                 <ReactPaginate
                     breakLabel="..."
-                    nextLabel="next >"
+                    nextLabel=" >"
                     onPageChange={handlePageClick}
                     pageRangeDisplayed={5}
                     pageCount={totalPages}
-                    previousLabel="< previous"
+                    previousLabel="<"
                     renderOnZeroPageCount={null}
                     pageClassName='page-item'
                     pageLinkClassName='page-link'
@@ -149,6 +148,13 @@ const HomePages = () => {
                     activeClassName='active'
                 />
             </div>
+            {/* banner */}
+            <div>
+            <img src="./images/banner1.webp" alt="Chicago" class="d-block w-100" style={{height: "450px"}} />
+            </div>
+
+
+
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
@@ -186,6 +192,7 @@ const HomePages = () => {
                     </div>
                 </div>
             </div>
+
             <ToastContainer></ToastContainer>
         </>
     );

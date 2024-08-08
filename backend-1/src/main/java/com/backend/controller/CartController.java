@@ -111,50 +111,56 @@ public class CartController {
 	}
 
 	@RequestMapping("/payOrders")
-	public ResponseEntity<?> PayOrders(@RequestParam Integer customerId,
-			@CookieValue(name = "jwtToken", required = false) String jwtToken) {
+	public ResponseEntity<?> payOrders(@CookieValue(name = "jwtToken", required = false) String jwtToken) {
+		System.out.println("id của customer: chạy tới đây");
+		System.out.println("id của customer: chạy tới đây token" + jwtToken);
 		if (jwtToken == null || jwtToken.isEmpty()) {
 			System.out.println("khách hàng ko tồn tại");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Khách hàng không tồn tại");
 		}
-
-		List<CartItem> item = cartDao.findByCustomerCustomerId(customerId);
-		CartItem itemCart = item.get(customerId);
-
 		try {
 			Claims claims = jwtutil.getClaims(jwtToken);
 			String userEmail = claims.getSubject();
-			Optional<Customer> itemCustomer = customerdao.findByEmail(userEmail);// lấy customer hiện tại bằng giải mã
+			System.out.println("email" + userEmail);
+			Optional<Customer> itemCustomer = customerdao.findByEmail(userEmail); // lấy customer hiện tại bằng giải mã
 																					// token
-			Customer customer = itemCustomer.get();
-			// đưa vào orders
-			Orders order = new Orders();
-			order.setAmount(itemCart.getQuantity() * itemCart.getProduct().getUnitPrice());
-			order.setCustomer(customer);
-			order.setOrderDate(new Date());
-			order.setStatus(false);
-			ordersdao.save(order);
-			
-			for (CartItem cart : item) {
-				OrderDetail orderdetail = new OrderDetail();
-				orderdetail.setOrder(order);
-				orderdetail.setProduct(cart.getProduct());
-				orderdetail.setQuantity(cart.getQuantity());
-				orderdetail.setUnitPrice(cart.getProduct().getUnitPrice());
-				orderDetailDAO.save(orderdetail);
-			}
-			if (customer != null) {
-				return ResponseEntity.ok(customer);
-			} else {
-				System.out.println("khách hàng ko tồn tại1");
+			System.out.println("email" + itemCustomer.get());
+
+			Customer customer = itemCustomer.orElse(null);
+			if (customer == null) {
+				System.out.println("khách hàng ko tồn tại");
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Khách hàng không tồn tại");
 			}
+			List<CartItem> items = cartDao.findByCustomerCustomerId(customer.getCustomerId());
+			if (items.isEmpty()) {
+				System.out.println("Giỏ hàng rỗng");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Giỏ hàng rỗng");
+			}
+			// Duyệt qua từng item trong giỏ hàng
+			for (CartItem itemCart : items) {
+				System.out.println("item của cart: " + itemCart);
+				System.out.println("id của customer: " + customer.getCustomerId());
+				// Đưa vào orders
+				Orders order = new Orders();
+				order.setAmount(itemCart.getQuantity() * itemCart.getProduct().getUnitPrice());
+				order.setCustomer(customer);
+				order.setOrderDate(new Date());
+				order.setStatus(false);
+				ordersdao.save(order);
+				OrderDetail orderdetail = new OrderDetail();
+				orderdetail.setOrder(order);
+				orderdetail.setProduct(itemCart.getProduct());
+				orderdetail.setQuantity(itemCart.getQuantity());
+				orderdetail.setUnitPrice(itemCart.getProduct().getUnitPrice());
+				orderDetailDAO.save(orderdetail);
+			}
+			cartDao.deleteAll();
+			return ResponseEntity.ok(customer);
 		} catch (Exception e) {
-			System.out.println("khách hàng ko tồn tại3");
 			System.out.println("lỗi" + e);
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token không hợp lệ");
 		}
-
 	}
 
+	
 }

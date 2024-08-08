@@ -3,35 +3,50 @@
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
 
+    .productName {
+        text-align: center;
+        font-size: 19px;
+        font-weight: 580;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .discount {
+        background-color: rgb(225, 110, 110);
+        width: 50px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
     &:hover {
         transform: translateY(-5px);
     }
 
-    .card-header{
+    .card-header {
         background-color: #f8f9fa;
         font-size: 15px;
         font-weight: bold;
         text-align: center;
     }
+
     .card-body {
         text-align: center;
-
         &:hover .product-info {
             opacity: 1;
             left: 50%;
-            transform: translate(-50%, -50%); /* Đảm bảo nút button căn giữa và hiển thị đúng */
+            transform: translate(-50%, -50%);
         }
-
         .product-info {
             position: absolute;
             top: 50%;
-            left: 50%; /* Đặt lại từ 120% thành 50% để căn giữa với ảnh */
-            transform: translate(-50%, -50%); /* Đưa nó vào giữa */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Đưa nó vào giữa */
             opacity: 0;
-            /* Ẩn thông tin sản phẩm ban đầu */
             transition: opacity 0.3s ease;
 
-            .btn{
+            .btn {
                 background-color: #973131;
                 font-size: 17px;
             }
@@ -43,21 +58,31 @@
         }
 
         .price {
-            font-size: 18px;
-            color: red;
-            font-weight: bold;
+            font-size: 13px;
+            color: black;
+            font-weight: 550;
+        }
+
+        .giaGoc {
+            font-size: 12px;
+            color: gray;
         }
     }
 }
-.pagination-container{
+
+.pagination-container {
     display: flex;
     justify-content: center;
+ font-size: 10px;
 }
-.modal-body{
-    strong{
+
+
+.modal-body {
+    strong {
         font-size: 32px;
     }
-    p{
+
+    p {
         font-size: 18px;
     }
 }

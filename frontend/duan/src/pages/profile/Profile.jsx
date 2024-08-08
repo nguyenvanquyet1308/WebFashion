@@ -1,23 +1,28 @@
 import './Profile.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
-
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
+    const navigate = useNavigate();
     const [password, setPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const customer = useSelector((state) => state.customer.userInfo.data)
+    const customer = useSelector((state) => state.customer.userInfo.data);
 
-    
+    useEffect(() => {
+        if (!customer) {
+            toast.warning("Bạn cần phải đăng nhập");
+            navigate("/login");
+        }
+    }, [customer, navigate]);
 
     const handleUpdatePassword = async (e) => {
-        e.preventDefault(); // Ngăn chặn form submit mặc định
-
+        e.preventDefault();
         if (newPassword !== confirmPassword) {
             toast.error("2 Password không trùng nhau!");
             return;
@@ -44,46 +49,44 @@ const Profile = () => {
             }
         }
     };
+
+    if (!customer) return null;
+    
     return (
-        <>
-            <div className="container mt-5">
-                <h2 className='text-center'>Chào mừng {customer.username}</h2>
-                <div className="row mt-5">
-                    <div className="col-md-6">
-                        <strong>
-                            Thông tin cá nhân:
-                        </strong>
-                        <h2 className="mt-3">{customer.username}</h2>
-                        <ul className="list-group">
-                            <li className="list-group-item"><strong>Email:</strong> </li>
-                            <li className="list-group-item"><strong>Phone:</strong></li>
-                            <li className="list-group-item"><strong>Ngày đăng ký:</strong> </li>
-                        </ul>
-                    </div>
-                    <div className='col-md-6'>
-                        <form onSubmit={handleUpdatePassword}>
-                            <div className='form-group'>
-                                <label className='labelmk'>Mật khẩu cũ</label>
-                                <input type="password" className='form-control' onChange={(e) => setPassword(e.target.value)} required />
-                            </div>
-                            <div className='form-group'>
-                                <label className='labelmk'>Mật khẩu mới</label>
-                                <input type="password" className='form-control' onChange={(e) => setNewPassword(e.target.value)} required />
-                            </div>
-                            <div className='form-group'>
-                                <label className='labelmk'>Nhập mật khẩu mới</label>
-                                <input type="password" className='form-control' onChange={(e) => setConfirmPassword(e.target.value)} required />
-                            </div>
-                            <div>
-                                <button type='submit' className='btn btn-primary mt-3'>Update</button>
-                            </div>
-                        </form>
-                    </div>
+        <div className="container mt-5">
+            <h2 className='text-center'>Chào mừng {customer.username}</h2>
+            <div className="row mt-5">
+                <div className="col-md-6">
+                    <strong>Thông tin cá nhân:</strong>
+                    <h2 className="mt-3">{customer.username}</h2>
+                    <ul className="list-group">
+                        <li className="list-group-item"><strong>Email: {customer.email}</strong></li>
+                        <li className="list-group-item"><strong>Phone: {customer.phone}</strong></li>
+                        <li className="list-group-item"><strong>Ngày đăng ký: {customer.registeredDate}</strong></li>
+                    </ul>
+                </div>
+                <div className='col-md-6'>
+                    <form onSubmit={handleUpdatePassword}>
+                        <div className='form-group'>
+                            <label className='labelmk'>Mật khẩu cũ</label>
+                            <input type="password" className='form-control' onChange={(e) => setPassword(e.target.value)} required />
+                        </div>
+                        <div className='form-group'>
+                            <label className='labelmk'>Mật khẩu mới</label>
+                            <input type="password" className='form-control' onChange={(e) => setNewPassword(e.target.value)} required />
+                        </div>
+                        <div className='form-group'>
+                            <label className='labelmk'>Nhập mật khẩu mới</label>
+                            <input type="password" className='form-control' onChange={(e) => setConfirmPassword(e.target.value)} required />
+                        </div>
+                        <div>
+                            <button type='submit' className='btn btn-primary mt-3'>Update</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-           
-        </>
+        </div>
     );
 };
+
 export default Profile;

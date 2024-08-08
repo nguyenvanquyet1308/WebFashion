@@ -18,6 +18,8 @@ import { getCurrent } from './components/apis/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import PrivateRoute from "./PrivateRoute"
+import Contact from './pages/contact/Contact';
+import Register from './pages/register/Register';
 
 function App() {
   const dispatch = useDispatch();
@@ -46,6 +48,8 @@ function App() {
           <Route path='user' element={<ManagerUser />} />
           <Route path='SecurityUser' element={<SecurityUser />} />
         </Route>
+        <Route path='/contact' element={<Contact></Contact>} />
+        <Route path='/register' element={<Register></Register>} />
         <Route path='/login' element={<Login />} />
         <Route path='/shoppingCart' element={<ShoppingCart />} />
         <Route path='/profile' element={<Profile />} />

@@ -1,15 +1,27 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
+import Cookies from 'js-cookie';
+
 import "../header/Header.scss";
+import { toast } from 'react-toastify';
 
 const Header = () => {
+    const navigate = useNavigate();
     const customer = useSelector((state) => state.customer.userInfo.data);
     const [collapsed, setCollapsed] = useState(false);
 
     const toggleSidebar = () => {
         setCollapsed(!collapsed);
+    };
+
+    const handleLogout = () => {
+        //  Cookies.remove("jwtToken", { path: '/' }); // xóa token khỏi cookie
+        Cookies.remove('jwtToken');
+        console.log("logout");
+        toast.success("Logout thành công");
+        navigate(0);
     };
 
     const isAdmin = customer && customer.roleNames && customer.roleNames.some(role => role === 'ADMIN');
@@ -54,7 +66,7 @@ const Header = () => {
                                         <div className="dropdown-menu dropdown-menu-end">
                                             <Link to="/profile" className="dropdown-item">Profile</Link>
                                             <a href="#" className="dropdown-item">Setting</a>
-                                            <a href="#" className="dropdown-item">Logout</a>
+                                            <a href="#" className="dropdown-item" onClick={handleLogout}>Logout</a>
                                         </div>
                                     </li>
                                 </ul>

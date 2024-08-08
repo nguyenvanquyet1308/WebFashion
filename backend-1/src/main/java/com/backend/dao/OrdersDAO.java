@@ -11,6 +11,7 @@ import com.backend.entity.*;
 
 
 public interface OrdersDAO extends JpaRepository<Orders, Integer> {
+	
     List<Orders> findByCustomerCustomerId(Integer customerId);
     
     long countByStatus(boolean status);
