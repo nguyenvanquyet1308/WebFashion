@@ -20,6 +20,7 @@ import { ToastContainer } from 'react-toastify';
 import PrivateRoute from "./PrivateRoute"
 import Contact from './pages/contact/Contact';
 import Register from './pages/register/Register';
+import ProductCarousel from 'pages/product/ProductCarousel';
 
 function App() {
   const dispatch = useDispatch();

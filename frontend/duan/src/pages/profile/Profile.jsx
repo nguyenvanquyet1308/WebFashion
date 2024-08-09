@@ -1,7 +1,7 @@
 import './Profile.scss';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,11 @@ const Profile = () => {
             navigate("/login");
         }
     }, [customer, navigate]);
-
+    const resetForm  = () =>{
+        setPassword("")
+        setNewPassword("")
+        setConfirmPassword("")
+    }
     const handleUpdatePassword = async (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
@@ -37,6 +41,7 @@ const Profile = () => {
                 }
             });
             if (response.status === 200) {
+                resetForm()
                 toast.success("Thay đổi mật khẩu thành công");
             }
         } catch (error) {
@@ -51,7 +56,6 @@ const Profile = () => {
     };
 
     if (!customer) return null;
-    
     return (
         <div className="container mt-5">
             <h2 className='text-center'>Chào mừng {customer.username}</h2>
@@ -85,7 +89,9 @@ const Profile = () => {
                     </form>
                 </div>
             </div>
+      <ToastContainer />
         </div>
+        
     );
 };
 

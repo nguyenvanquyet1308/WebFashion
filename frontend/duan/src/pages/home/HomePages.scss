@@ -17,8 +17,6 @@
         font-size: 14px;
         font-weight: 600;
     }
-
-
     &:hover {
         transform: translateY(-5px);
     }
@@ -78,11 +76,52 @@
 
 
 .modal-body {
-    strong {
-        font-size: 32px;
-    }
 
+    background-color: antiquewhite;
+
+    strong {
+        font-size: 30px;
+    }
     p {
         font-size: 18px;
+        font-weight: 570;
     }
+    
+}
+.modal-footer{
+    button{
+        font-size: 20px;
+        color: black;
+        font-weight: 500;
+    }
+}
+.nhanbantin{
+    width: 100%;
+    height: 230px;
+    background-color: rgb(231, 226, 226);
+     
+    text-align: center;
+
+    h2{
+        font-size: 22px;
+        font-weight: 600;
+    }
+    h5{
+        font-size: 11px;
+        font-weight: 520;
+    }
+    .bantin{
+        input{
+            width: 250px;
+            height: 35px;
+            border-radius: 10px 10px 10px 10px; /* Làm bo tròn góc trái của input */
+        }
+        button{
+            font-size: 14px;
+            border-radius: 10px 10px 10px 10px; /* Làm bo tròn góc trái của input */
+
+        }
+       
+    }
+   
 }

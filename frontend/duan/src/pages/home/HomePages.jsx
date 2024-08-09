@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import TruncateText from 'services/TruncateText';
+import ProductCarousel from 'pages/product/ProductCarousel';
 
 const HomePages = () => {
     const [products, setProducts] = useState([]);
@@ -14,9 +15,20 @@ const HomePages = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productId, setProductId] = useState('');
     const [quantity, setQuantity] = useState('');
+    const [sendMail,setSendMail] = useState("");
     const pageSize = 12;
     const customer = useSelector((state) => state.customer.userInfo.data)
 
+    const handleSendMail = async () =>{
+        try {
+            const response = await axios.post(`http://localhost:8080/api/user/sendMail/${sendMail}`)
+            console.log(response.data);
+            toast.success("Gửi mail thành công !")
+        } catch (error) {
+            console.log("lỗi gửi mail: ",error);
+            
+        }
+    }
     useEffect(() => {
         const showProduct = async (page) => {
             try {
@@ -44,8 +56,6 @@ const HomePages = () => {
         setSelectedProduct(product);
         setProductId(product.productId);
     };
- 
-
     const handleAddCart = async () => {
         console.log("dataa customer" + customer);
 
@@ -149,12 +159,26 @@ const HomePages = () => {
                 />
             </div>
             {/* banner */}
+            <br />
             <div>
-            <img src="./images/banner1.webp" alt="Chicago" class="d-block w-100" style={{height: "450px"}} />
+                <img src="./images/banner.webp" alt="Chicago" class="d-block w-100" style={{ height: "450px" }} />
             </div>
-
-
-
+            <br />
+            <div>
+                <ProductCarousel></ProductCarousel>
+            </div> <br /> <br />
+            <div className='nhanbantin'>
+                <div>
+                    <h2>ĐĂNG KÝ NHẬN BẢN TIN</h2>
+                    <h5>Đăng ký nhận bản tin để chúng tôi liên hệ với bạn, 
+                        để được cập nhật những mẫu thiết kế mới nhất</h5>
+                        <br />
+                    <div class="bantin ">
+                      <input type="text" placeholder='Hãy nhập email của bạn tại đây ...' onChange={(e)=>setSendMail(e.target.value)} />
+                      <button className='btn btn-dark ms-1' onClick={handleSendMail} >Đăng ký</button>
+                    </div>
+                </div>
+            </div>
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
@@ -179,7 +203,7 @@ const HomePages = () => {
                                             <input type="number" className='form-control' value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                                         </div>
                                         <div className='form-group mt-5'>
-                                            <p>Giá sản phẩm: {selectedProduct.unitPrice}</p>
+                                            <p>Giá sản phẩm: {formatCurrency(selectedProduct.unitPrice)}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -187,12 +211,11 @@ const HomePages = () => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary" onClick={handleAddCart}>Thêm sản phẩm vào giỏ hàng</button>
+                            <button type="button" className="btn btn-success" onClick={handleAddCart}>Thêm sản phẩm vào giỏ hàng</button>
                         </div>
                     </div>
                 </div>
             </div>
-
             <ToastContainer></ToastContainer>
         </>
     );

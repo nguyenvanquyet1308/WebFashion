@@ -1,4 +1,5 @@
 import TruncateText from "services/TruncateText";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Footer = () => {
     return (
@@ -16,10 +17,9 @@ const Footer = () => {
                     <div className="col-lg-3 col-md-6 mb-4 mb-md-0">
                         <h5 className="text-uppercase">Giới Thiệu</h5>
                         <ul className="list-unstyled mb-0">
-                            <li><a href="#!" className="text-white">Link 1</a></li>
-                            <li><a href="#!" className="text-white">Link 2</a></li>
-                            <li><a href="#!" className="text-white">Link 3</a></li>
-                            <li><a href="#!" className="text-white">Link 4</a></li>
+                            <li><a href="#!" className="text-white">Facebook  </a>  </li>
+                            <li><a href="#!" className="text-white">Instagram</a></li>
+                            
                         </ul>
                     </div>
                     <div className="col-lg-3 col-md-6 mb-4 mb-md-0">

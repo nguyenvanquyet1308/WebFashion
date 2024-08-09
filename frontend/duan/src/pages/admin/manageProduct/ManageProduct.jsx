@@ -44,7 +44,6 @@ const ManageProduct = () => {
 
     const handleAddNewProducts = async (e) => {
         e.preventDefault();
-
         try {
             const response = await axios.post("http://localhost:8080/api/admin/products/add", addProducts, {
                 headers: { "Content-Type": "application/json" },
