@@ -14,24 +14,29 @@ import Profile from './pages/profile/Profile';
 import ManagerUser from './pages/admin/manageUser/ManagerUser';
 import SecurityUser from './pages/admin/SecurityUser/SecurityUser';
 import PayCart from './pages/Pay/PayCart';
-import { getCurrent } from './components/apis/auth';
-import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import PrivateRoute from "./PrivateRoute"
 import Contact from './pages/contact/Contact';
 import Register from './pages/register/Register';
-import ProductCarousel from 'pages/product/ProductCarousel';
+import ManageOrders from 'pages/admin/manageOrders/ManageOrders';
+import { useAuthStore } from 'store/auth.store';
 
 function App() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
+  const { fetchUserInfo } = useAuthStore()
+
 
   useEffect(() => {
-    getCurrent({ dispatch, navigate });
-  }, [dispatch, navigate]);
+    const handleFetchUserInfo = async () => {
+        await fetchUserInfo()
+    }
+    handleFetchUserInfo()
+  }, []);
+
 
   const isAdminRoute = location.pathname.startsWith('/admin');
+
+
 
   return (
     <>
@@ -47,6 +52,7 @@ function App() {
           <Route path='products' element={<ManageProduct />} />
           <Route path='category' element={<ManageCategory />} />
           <Route path='user' element={<ManagerUser />} />
+          <Route path='orders' element={<ManageOrders></ManageOrders>} />
           <Route path='SecurityUser' element={<SecurityUser />} />
         </Route>
         <Route path='/contact' element={<Contact></Contact>} />

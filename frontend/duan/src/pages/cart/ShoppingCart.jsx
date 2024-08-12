@@ -1,14 +1,15 @@
-
 import { useEffect, useState } from "react";
 import "./ShoppingCart.scss";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { formatCurrency } from "services/FormatCurrency";
+import { useAuthStore } from "store/auth.store";
 const ShoppingCart = () => {
     const navigate = useNavigate();
     const [ShoppingCart, setShoppingCart] = useState([]);
-    const customer = useSelector((state) => state.customer.userInfo.data);
+    const {userInfo} = useAuthStore();
+    const customer = userInfo.data;
     // console.log(cus);
 
     useEffect(() => {
@@ -22,9 +23,9 @@ const ShoppingCart = () => {
     useEffect(() => {
         const showCart = async () => {
             try {
-                console.log("id cuar cusstomer o cart: " + customer.customerId);
+                console.log("id cuar cusstomer o cart: " + customer?.customerId);
                 const response = await axios.get("http://localhost:8080/api/user/cart/customer", {
-                    params: { customerId: customer.customerId }
+                    params: { customerId: customer?.customerId }
                 });
                 //  console.log("Cart data:", response.data)
                 setShoppingCart(response.data);
@@ -63,9 +64,7 @@ const ShoppingCart = () => {
             }
         }
     };
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    };
+
     const totalPrice = ShoppingCart.reduce((total, item) => total + item.product.unitPrice * item.quantity, 0);
 
 
@@ -88,7 +87,7 @@ const ShoppingCart = () => {
                         <tr key={index}>
                             <td>{item.product.productId}</td>
                             <td>{item.product.name}</td>
-                            <td>{<input type="number" value={item.quantity} style={{ width: "70px" }} onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))} />}</td>
+                            <td>{<input type="number" min={1} value={item.quantity} style={{ width: "70px" }} onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))} />}</td>
                             <td>{formatCurrency(item.product.unitPrice * item.quantity)}</td>
                             <td><button className="btn btn-primary" onClick={() => handleUpdateQuantity(item.id)} >Update</button>     <button className="btn btn-danger ms-2" onClick={() => handleDelete(item.id)}  >Delete</button> </td>
                         </tr>

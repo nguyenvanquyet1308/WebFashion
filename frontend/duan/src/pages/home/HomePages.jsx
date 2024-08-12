@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 import TruncateText from 'services/TruncateText';
 import ProductCarousel from 'pages/product/ProductCarousel';
+import { formatCurrency } from 'services/FormatCurrency';
+import { useAuthStore } from 'store/auth.store';
 
 const HomePages = () => {
     const [products, setProducts] = useState([]);
@@ -14,10 +15,12 @@ const HomePages = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productId, setProductId] = useState('');
-    const [quantity, setQuantity] = useState('');
+    const [quantity, setQuantity] = useState(1);
     const [sendMail,setSendMail] = useState("");
     const pageSize = 12;
-    const customer = useSelector((state) => state.customer.userInfo.data)
+
+    const {userInfo} = useAuthStore();
+    const customer = userInfo.data;
 
     const handleSendMail = async () =>{
         try {
@@ -58,31 +61,25 @@ const HomePages = () => {
     };
     const handleAddCart = async () => {
         console.log("dataa customer" + customer);
-
         console.log(customer.customerId);
         try {
             await axios.post('http://localhost:8080/api/user/cart/add', {
                 product: { productId: parseInt(productId) },
                 quantity: parseInt(quantity),
                 customer: { customerId: customer.customerId }
-
             }, {
                 headers: { 'Content-Type': 'application/json' },
                 Authorization: `Bearer ${customer.token}`
             });
             toast.success("Thêm sản phẩm thành công")
+            setQuantity(1)
             console.log("Thêm sp thành công");
-
-
         } catch (error) {
             console.log("Lỗi thêm sản phẩm: " + error);
             toast.error("Lỗi thêm sản phẩm")
         }
     }
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    };
-
+ 
     return (
         <>
             <div>
@@ -200,7 +197,7 @@ const HomePages = () => {
                                         </div>
                                         <div className='form-group mt-3'>
                                             <label htmlFor="">Số lượng: </label>
-                                            <input type="number" className='form-control' value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+                                            <input type="number" className='form-control' min={1} value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                                         </div>
                                         <div className='form-group mt-5'>
                                             <p>Giá sản phẩm: {formatCurrency(selectedProduct.unitPrice)}</p>

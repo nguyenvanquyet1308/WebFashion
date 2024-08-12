@@ -132,21 +132,23 @@ public class CartController {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Khách hàng không tồn tại");
 			}
 			List<CartItem> items = cartDao.findByCustomerCustomerId(customer.getCustomerId());
+			
 			if (items.isEmpty()) {
 				System.out.println("Giỏ hàng rỗng");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Giỏ hàng rỗng");
 			}
+			Orders order = new Orders();
+			order.setAmount(items.get(0).getQuantity() * items.get(0).getProduct().getUnitPrice());
+			order.setCustomer(customer);
+			order.setOrderDate(new Date());
+			order.setStatus(false);
+			ordersdao.save(order);
 			// Duyệt qua từng item trong giỏ hàng
 			for (CartItem itemCart : items) {
 				System.out.println("item của cart: " + itemCart);
 				System.out.println("id của customer: " + customer.getCustomerId());
 				// Đưa vào orders
-				Orders order = new Orders();
-				order.setAmount(itemCart.getQuantity() * itemCart.getProduct().getUnitPrice());
-				order.setCustomer(customer);
-				order.setOrderDate(new Date());
-				order.setStatus(false);
-				ordersdao.save(order);
+		
 				OrderDetail orderdetail = new OrderDetail();
 				orderdetail.setOrder(order);
 				orderdetail.setProduct(itemCart.getProduct());

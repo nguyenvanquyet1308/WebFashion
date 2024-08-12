@@ -54,7 +54,7 @@ public class SecurityConfig {
 	    http
 	        .csrf().disable() // Tắt CSRF vì không sử dụng đăng nhập dựa trên form
 	        .authorizeHttpRequests()
-	        .requestMatchers("api/login/**", "api/user/**","getimage/**","api/user/cart/**","api/admin/**","**","api/orders/**").permitAll()
+	        .requestMatchers("api/login/**", "api/user/**","getimage/**","api/user/cart/**","api/admin/**","**","api/orders/**","/api/updateStatusOrders/**").permitAll()
 	        .anyRequest().authenticated()
 	        .and()
 	        .exceptionHandling()

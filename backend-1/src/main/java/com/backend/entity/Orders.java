@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.ToString;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,14 +35,15 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name = "customerId")
-    @JsonBackReference
+ //   @JsonBackReference
     private Customer customer;
 
     private double amount;
 
     private Boolean status;
-
+    
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonIgnore
+  //  @JsonManagedReference
     private List<OrderDetail> orderDetails;
 }

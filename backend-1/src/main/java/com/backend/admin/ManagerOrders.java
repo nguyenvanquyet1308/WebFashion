@@ -1,9 +1,9 @@
 	package com.backend.admin;
 	
 	import java.util.List;
-	
-	
-	import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 	import org.springframework.http.HttpStatus;
 	import org.springframework.http.ResponseEntity;
 	import org.springframework.web.bind.annotation.CrossOrigin;
@@ -88,6 +88,17 @@
 		public ResponseEntity<?> showOrderByCustomer(@PathVariable Integer customerId) {
 			
 			return ResponseEntity.ok(ordersdao.findByCustomerCustomerId(customerId));
+		}
+		@PutMapping("updateStatusOrders/{orderId}")
+		public ResponseEntity<?> updateStatusOrders(@PathVariable Integer orderId){
+
+		    Optional<Orders> orders = ordersdao.findById(orderId);
+		    Orders item = orders.get();
+		    item.setStatus(true);
+		    System.out.println(item);
+		    
+		    return ResponseEntity.ok(ordersdao.save(item));
+			
 		}
 
 		

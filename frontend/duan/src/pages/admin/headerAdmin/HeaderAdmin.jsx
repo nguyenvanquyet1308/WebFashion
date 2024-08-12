@@ -3,14 +3,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './HeaderAdmin.scss';
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 
 const HeaderAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
     const navigate = useNavigate();
-    const customer = useSelector((state) => state.customer.userInfo.data)
 
 
     const handleLogout = () => {
@@ -38,13 +36,15 @@ const HeaderAdmin = () => {
                     </div>
                     <div className="sidebar-item">
                         <Link to={'/admin/user'} >  Manage Customer</Link>
-
                     </div>
                     <div className="sidebar-item">
-                        <span >Manage Oders</span>
+                        <Link to={'/admin/orders'} >  Manage Orders</Link>
                     </div>
                     <div className="sidebar-item">
-                        <Link to={'/admin/SecurityUser'} >  Security User</Link>
+                        <Link to={'/admin/SecurityUser'} > Manage Security User</Link>
+                    </div>
+                    <div className="sidebar-item">
+                        <Link to={'/admin/statistical'} >Manage Statistical</Link>
                     </div>
                 </aside>
                 <div className="main">
@@ -59,7 +59,7 @@ const HeaderAdmin = () => {
                                         <img className='iconUser' src="./images/user.jpg" alt="Profile" />
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-end">
-                                        <a href="#" className="dropdown-item">Profile</a>
+                                        <a href="/" className="dropdown-item">Home</a>
                                         <a href="#" className="dropdown-item">Setting</a>
                                         <a className="dropdown-item" onClick={handleLogout} >Logout</a>
                                     </div>

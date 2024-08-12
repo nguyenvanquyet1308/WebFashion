@@ -3,6 +3,11 @@ import { useEffect, useState } from 'react';
 import './Product.scss';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
+import TruncateText from 'services/TruncateText';
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { formatCurrency } from 'services/FormatCurrency';
+import { useAuthStore } from 'store/auth.store';
 
 const Product = () => {
 
@@ -10,11 +15,18 @@ const Product = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
     const [keywords, setKeywords] = useState("")
+    const navigate = useNavigate();
+    
+    const {userInfo} = useAuthStore()
+    const customer = userInfo.data;
+
+
+
     const pageSize = 6;
     useEffect(() => {
         showProduct(currentPage);
     }, [currentPage]);
-    
+
     const showProduct = async (page) => {
         try {
             const response = await axios.get(`http://localhost:8080/api/user/homepage`, {
@@ -55,6 +67,26 @@ const Product = () => {
             showProduct(currentPage);
         }
     };
+    const handleAddCart = async (productId) => {
+     //   if (!customer) return null;
+        console.log("dataa customer" + customer);
+        console.log(customer.customerId);
+        try {
+            await axios.post('http://localhost:8080/api/user/cart/add', {
+                product:  { productId: parseInt(productId) } ,
+                quantity: parseInt(1),
+                customer: { customerId: customer.customerId }
+            }, {
+                headers: { 'Content-Type': 'application/json' },
+                Authorization: `Bearer ${customer.token}`
+            });
+            toast.success("Thêm sản phẩm thành công")
+            console.log("Thêm sp thành công");
+        } catch (error) {
+            console.log("Lỗi thêm sản phẩm: " + error);
+            toast.error("Lỗi thêm sản phẩm")
+        }
+    }
 
 
     // useEffect(() => {
@@ -78,9 +110,8 @@ const Product = () => {
 
     // }, [currentPage])
 
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    };
+   
+
     return (
         <>
 
@@ -149,12 +180,12 @@ const Product = () => {
                     <div class="row">
                         {product.map((item, index) => (
                             <div class="col-md-4 mt-2">
-                                <div key={index} class="card">
-                                    <div className='card-header'>{item.name}</div>
+                                <div key={index} class="product">
+                                    <div className='textProduct'><TruncateText text={item.name} maxLength={20} /></div>
                                     <img src={`http://localhost:8080/getimage/${item.image}`} alt="" style={{ height: "320px", width: "260px" }} />
-                                    <div class="card-body">
-                                        <p class="card-text">{formatCurrency(item.unitPrice)}</p>
-                                    </div>
+                                    <div class="infoProduct">
+                                        <p className="textPrice mt-2">{formatCurrency(item.unitPrice)}  </p>
+                                        <button className='btn btn-dark' onClick={()=>handleAddCart(item.productId)} >Thêm vào giỏ hàng</button>                                    </div>
                                 </div>
                             </div>
                         ))
@@ -184,6 +215,8 @@ const Product = () => {
                     activeClassName='active'
                 />
             </div>
+            <ToastContainer></ToastContainer>
+
         </>
     )
 }

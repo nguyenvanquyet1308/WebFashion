@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './ManagerUser.scss';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import TruncateText from 'services/TruncateText';
 
 const ManagerUser = () => {
     const [Customer, setCustomer] = useState([]);
@@ -26,7 +27,6 @@ const ManagerUser = () => {
         });
         setEditCustomer(null)
     };
-
     useEffect(() => {
         const showCustomer = async () => {
             try {
@@ -34,7 +34,7 @@ const ManagerUser = () => {
                 console.log(response.data);
                 setCustomer(response.data);
             } catch (error) {
-                console.error("Error fetching customers: ", error);
+                console.error("Lỗi show customer: ", error);
             }
         };
         showCustomer();
@@ -45,7 +45,7 @@ const ManagerUser = () => {
             await axios.delete(`http://localhost:8080/api/admin/user/delete/${customerId}`);
             setCustomer(Customer.filter(customer => customer.customerId !== customerId));
         } catch (error) {
-            console.error("Error deleting customer: ", error);
+            console.error("Lỗi khi xóa customer: ", error);
         }
     };
 
@@ -76,7 +76,6 @@ const ManagerUser = () => {
             
         }
     }
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setNewCustomer(prevState => ({
@@ -148,7 +147,7 @@ const ManagerUser = () => {
                                 <td>{customer.customerId}</td>
                                 <td>{customer.username}</td>
                                 <td>{customer.email}</td>
-                                <td>{customer.password}</td>
+                                <td>{<TruncateText text={customer.password} maxLength={20} />}</td>
                                 <td>{customer.phone}</td>
                                 <td>{customer.registeredDate}</td>
                                 <td>{customer.admin}</td>

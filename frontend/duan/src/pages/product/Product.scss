@@ -40,3 +40,22 @@
     color: #EF5A6F;
     font-weight: 600;
 }
+.product{
+    text-align: center;
+    .textProduct{
+        font-size: 18px;
+        font-weight: 560;
+    }
+    .textPrice{
+        color: #EF5A6F;
+        font-weight: 580;
+    }
+    .infoProduct{
+
+      button:hover{
+        background-color: red;
+      }
+    }
+   
+
+}

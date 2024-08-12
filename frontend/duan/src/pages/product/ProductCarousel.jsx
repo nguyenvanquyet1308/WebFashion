@@ -56,15 +56,16 @@ const ProductCarousel = () => {
     <div>
         <div><h2 className="textname">Sản phẩm theo loại</h2></div>
         <div className="container">
-
+            <div className="cbb">
             <select
-                className="form-control cbb"
+                className=" "
                 onChange={handleCategoryChange}
             >
                 {category.map((item) => (
                     <option key={item.id} value={item.categoryId}>{item.name}</option>
                 ))}
             </select>
+            </div>
         </div>
         <Slider {...settings}>
             {products.map((product, index) => (

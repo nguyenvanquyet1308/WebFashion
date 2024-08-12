@@ -51,7 +51,8 @@ public class Customer implements Serializable {
     @OneToMany(mappedBy = "customer")
     private List<CustomerRoles> customerRoles;
     
-    @JsonManagedReference
+    //@JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "customer")
     private List<Orders> orders;
     

@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from 'store/auth.store';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -12,7 +12,8 @@ const Profile = () => {
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const customer = useSelector((state) => state.customer.userInfo.data);
+    const {userInfo} = useAuthStore();
+    const customer = userInfo.data;
 
     useEffect(() => {
         if (!customer) {

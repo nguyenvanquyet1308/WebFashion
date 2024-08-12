@@ -14,6 +14,8 @@ import jakarta.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 @Data
@@ -44,6 +46,7 @@ public class Product {
 	// @NotNull(message = "Không được để trống trạng thái!")
 	private Boolean status;
 
+	
 	@ManyToOne
 	@JoinColumn(name = "categoryId")
 	private Category category;

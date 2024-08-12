@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.scss";
-import { useDispatch } from "react-redux";
-import { loginStart } from "components/redux/customerSlice"
+import { useAuthStore } from "store/auth.store";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState({})
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const {loginRequest , dataLogin } = useAuthStore() 
 
     const checkValidate = () => {
         const check = {};
@@ -22,29 +20,37 @@ const Login = () => {
         if (!password) {
             check.password = "Vui lòng điền thông tin password !"
         }
-        
+        else if(password.length < 6){
+            check.password = "Password phải hơn 6 ký tự !"
+        }
         setError(check);
         return Object.keys(check).length === 0
     }
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         if(checkValidate()){
-            dispatch(loginStart({
-                data: {
-                    email: email,
-                    password: password
-                },
-                callback: () => {
-                    console.log("log sussess");
-                    toast.success("Đăng nhập thành công !")
-                    setTimeout(() => {
-                        navigate("/")
-                    }, 1000);
-                },
-                errorCallback: () => {
-                    toast.error("Tài khoản mật khẩu sai !")
-                }
-            }))
+            // dispatch(loginStart({
+            //     data: {
+            //         email: email,
+            //         password: password
+            //     },
+            //     callback: () => {
+            //         console.log("log sussess");
+            //         toast.success("Đăng nhập thành công !")
+            //         setTimeout(() => {
+            //             navigate("/")
+            //         }, 1000);
+            //     },
+            //     errorCallback: () => {
+            //         toast.error("Tài khoản mật khẩu sai !")
+            //     }
+            // }))
+            const dataPayload = {
+                email ,
+                password
+            }
+
+            await loginRequest(dataPayload, navigate)
         }else{
             toast.error("Cần điền đủ các trường thông tin !")
         }
@@ -118,6 +124,10 @@ const Login = () => {
                             className="btnSubmit btn-primary"
                         >
                             Submit
+                            <br />
+                            <span>
+                            {dataLogin.isLoading && "Loading ..."}
+                            </span>
                         </button>
                         <br />
                         <div class="d-flex justify-content-between">
