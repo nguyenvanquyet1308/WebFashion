@@ -82,7 +82,6 @@ const Register = () => {
             toast.error("Có lỗi xảy ra khi đăng ký !");
         }
     };
-
     return (
         <>
             <div className="row d-flex justify-content-center mt-5">
@@ -148,7 +147,7 @@ const Register = () => {
                     </form>
                 </div>
             </div>
-            <ToastContainer />
+            <ToastContainer containerId="toast1" />
         </>
     );
 };

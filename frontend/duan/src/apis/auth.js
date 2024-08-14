@@ -15,3 +15,11 @@ export const getUserInfo = () =>
         method: "get",
         withCredentials: true,
     });
+
+    export const updatePassword = (data)=>{
+        axios({
+            url: "/login/updatePassword",
+            method: "post",
+            data
+        })
+    }

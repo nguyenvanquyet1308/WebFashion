@@ -9,13 +9,8 @@ import { useAuthStore } from 'store/auth.store';
 
 const Header = () => {
     const { userInfo } = useAuthStore()
-
     const navigate = useNavigate();
-    const [collapsed, setCollapsed] = useState(false);
 
-    const toggleSidebar = () => {
-        setCollapsed(!collapsed);
-    };
 
     const handleLogout = () => {
         Cookies.remove('jwtToken');
@@ -41,9 +36,6 @@ const Header = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/contact">Contact</Link>
                         </li>
-
-
-
                         {isAdmin && (
                             <li className="nav-item">
                                 <Link className="nav-link" to="/admin">Admin</Link>
@@ -79,7 +71,7 @@ const Header = () => {
                                 :
                                 (
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/login">Login</Link>
+                                        <Link className="nav-link" to="/login" style={{marginTop:"10px",fontSize: "15px"}}>Login</Link>
                                     </li>
                                 )
                         }

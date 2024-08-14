@@ -52,10 +52,9 @@ const Profile = () => {
                 toast.error("Mật khẩu không đúng!");
             } else {
                 toast.error("Có lỗi xảy ra!");
-            }
+            }   
         }
     };
-
     if (!customer) return null;
     return (
         <div className="container mt-5">
@@ -65,9 +64,9 @@ const Profile = () => {
                     <strong>Thông tin cá nhân:</strong>
                     <h2 className="mt-3">{customer.username}</h2>
                     <ul className="list-group">
-                        <li className="list-group-item"><strong>Email: {customer.email}</strong></li>
-                        <li className="list-group-item"><strong>Phone: {customer.phone}</strong></li>
-                        <li className="list-group-item"><strong>Ngày đăng ký: {customer.registeredDate}</strong></li>
+                        <li className="list-group-item"><b>Email: {customer.email}</b></li>
+                        <li className="list-group-item"><b>Phone: {customer.phone}</b></li>
+                        <li className="list-group-item"><b>Ngày đăng ký: {customer.registeredDate}</b></li>
                     </ul>
                 </div>
                 <div className='col-md-6'>
@@ -90,9 +89,8 @@ const Profile = () => {
                     </form>
                 </div>
             </div>
-      <ToastContainer />
+      <ToastContainer containerId="toast2" />
         </div>
-        
     );
 };
 

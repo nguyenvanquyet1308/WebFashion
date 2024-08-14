@@ -20,11 +20,11 @@ import Contact from './pages/contact/Contact';
 import Register from './pages/register/Register';
 import ManageOrders from 'pages/admin/manageOrders/ManageOrders';
 import { useAuthStore } from 'store/auth.store';
+import MangageStatistical from 'pages/admin/manageStatistical/ManageStatistical';
 
 function App() {
   const location = useLocation();
   const { fetchUserInfo } = useAuthStore()
-
 
   useEffect(() => {
     const handleFetchUserInfo = async () => {
@@ -32,10 +32,7 @@ function App() {
     }
     handleFetchUserInfo()
   }, []);
-
-
   const isAdminRoute = location.pathname.startsWith('/admin');
-
 
 
   return (
@@ -54,7 +51,9 @@ function App() {
           <Route path='user' element={<ManagerUser />} />
           <Route path='orders' element={<ManageOrders></ManageOrders>} />
           <Route path='SecurityUser' element={<SecurityUser />} />
+          <Route path='statistical' element={<MangageStatistical/>} />
         </Route>
+        
         <Route path='/contact' element={<Contact></Contact>} />
         <Route path='/register' element={<Register></Register>} />
         <Route path='/login' element={<Login />} />

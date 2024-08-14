@@ -103,7 +103,7 @@ const ShoppingCart = () => {
             </div> <br />
             <div className="text-end "><Link to="/paycart" ><button className="pay btn btn-info " >Thanh toán ngay</button></Link></div>
         </div> <br /><br />
-        <ToastContainer></ToastContainer>
+        <ToastContainer containerId="toast8"/>
     </>)
 }
 export default ShoppingCart;

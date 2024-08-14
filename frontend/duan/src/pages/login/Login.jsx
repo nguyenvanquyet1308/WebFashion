@@ -10,7 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState({})
     const navigate = useNavigate();
-    const {loginRequest , dataLogin } = useAuthStore() 
+    const { loginRequest, dataLogin } = useAuthStore()
 
     const checkValidate = () => {
         const check = {};
@@ -20,7 +20,7 @@ const Login = () => {
         if (!password) {
             check.password = "Vui lòng điền thông tin password !"
         }
-        else if(password.length < 6){
+        else if (password.length < 6) {
             check.password = "Password phải hơn 6 ký tự !"
         }
         setError(check);
@@ -28,56 +28,18 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
-        if(checkValidate()){
-            // dispatch(loginStart({
-            //     data: {
-            //         email: email,
-            //         password: password
-            //     },
-            //     callback: () => {
-            //         console.log("log sussess");
-            //         toast.success("Đăng nhập thành công !")
-            //         setTimeout(() => {
-            //             navigate("/")
-            //         }, 1000);
-            //     },
-            //     errorCallback: () => {
-            //         toast.error("Tài khoản mật khẩu sai !")
-            //     }
-            // }))
+        if (checkValidate()) {
             const dataPayload = {
-                email ,
+                email,
                 password
             }
-
             await loginRequest(dataPayload, navigate)
-        }else{
+        } else {
             toast.error("Cần điền đủ các trường thông tin !")
         }
-       
+
     }
-    // const handleCheckLogin = async (e) => {
-    //     e.preventDefault();
 
-    //     try {
-    //         const response = await axios.get("http://localhost:8080/api/login/authenticate", {
-    //             params: { email, password }
-    //         });
-
-    //         setCustomer(response.data); 
-    //         localStorage.setItem("customer", JSON.stringify(response.data));
-    //         console.log("Customer data:", response.data);
-    //         toast.success("Đăng nhập thành công!"); 
-
-
-    //         setTimeout(() => {
-    //             navigate("/");
-    //         }, 2000);
-    //     } catch (error) {
-    //         console.error("Lỗi đăng nhập:", error);
-    //         toast.error("Tài khoản hoặc mật khẩu không chính xác !"); 
-    //     }
-    // }
     return (
         <>
             <div className="form">
@@ -126,7 +88,7 @@ const Login = () => {
                             Submit
                             <br />
                             <span>
-                            {dataLogin.isLoading && "Loading ..."}
+                                {dataLogin.isLoading && "Loading ..."}
                             </span>
                         </button>
                         <br />
@@ -138,7 +100,7 @@ const Login = () => {
                 </div>
             </div>
 
-            <ToastContainer />
+            <ToastContainer containerId="toast5" />
 
         </>
     );

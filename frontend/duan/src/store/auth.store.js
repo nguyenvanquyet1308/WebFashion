@@ -1,11 +1,10 @@
-import { getUserInfo, login } from "apis";
+import { getUserInfo, login, updatePassword } from "apis";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 
 const showNotification = (type, message) => {
     toast[type](message);
 };
-
 export const useAuthStore = create((set) => ({
     userInfo: {
         data: null,
@@ -44,7 +43,6 @@ export const useAuthStore = create((set) => ({
             }));
         }    
     },
-
     /// login 
     loginRequest: async (dataPayload, navigate) => {
         set((state) => ({
@@ -66,8 +64,7 @@ export const useAuthStore = create((set) => ({
                     error: null,
                 },
             }));
-            showNotification("success", "Đăng nhập thành công.");
-            navigate("/");  
+            navigate(0)
         } catch (error) {
             console.log("🚀 ~ loginRequest: ~ error:", error);
             set((state) => ({
@@ -79,7 +76,5 @@ export const useAuthStore = create((set) => ({
             showNotification("error", "Tài khoản hoặc mật khẩu sai");
         }
     },
-
-
-
+   
 }));

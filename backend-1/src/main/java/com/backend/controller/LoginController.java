@@ -163,7 +163,7 @@ public class LoginController {
 				//jwtCookie.setHttpOnly(true);
 				jwtCookie.setSecure(true); 
 				jwtCookie.setPath("/");
-				jwtCookie.setMaxAge(24 * 60 * 60);
+				jwtCookie.setMaxAge(10 * 60);
 				response.addCookie(jwtCookie);
 				CustomerResponse customerResponse = new CustomerResponse(itemCustomer.getCustomerId(),
 						itemCustomer.getRegisteredDate(), token, itemCustomer.getPhone(), itemCustomer.getUsername(),

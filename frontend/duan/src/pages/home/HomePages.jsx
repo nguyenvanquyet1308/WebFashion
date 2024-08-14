@@ -8,6 +8,7 @@ import TruncateText from 'services/TruncateText';
 import ProductCarousel from 'pages/product/ProductCarousel';
 import { formatCurrency } from 'services/FormatCurrency';
 import { useAuthStore } from 'store/auth.store';
+import { useNavigate } from 'react-router-dom';
 
 const HomePages = () => {
     const [products, setProducts] = useState([]);
@@ -17,10 +18,12 @@ const HomePages = () => {
     const [productId, setProductId] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [sendMail,setSendMail] = useState("");
+    const navigate = useNavigate();
     const pageSize = 12;
 
     const {userInfo} = useAuthStore();
     const customer = userInfo.data;
+
 
     const handleSendMail = async () =>{
         try {
@@ -60,6 +63,11 @@ const HomePages = () => {
         setProductId(product.productId);
     };
     const handleAddCart = async () => {
+        if (customer == undefined) {
+            navigate("/")
+            toast.warning("Bạn cần đăng nhập để sử dụng Cart !")
+            return
+           };
         console.log("dataa customer" + customer);
         console.log(customer.customerId);
         try {
@@ -83,28 +91,28 @@ const HomePages = () => {
     return (
         <>
             <div>
-                <div id="carousel1" class="carousel slide" data-bs-ride="carousel">
+                <div id="carousel1" className="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carousel1" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#carousel1" data-bs-slide-to="0" className="active"></button>
                         <button type="button" data-bs-target="#carousel1" data-bs-slide-to="1"></button>
                         <button type="button" data-bs-target="#carousel1" data-bs-slide-to="2"></button>
                     </div>
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
+                        <div className="carousel-item active">
                             <img src="./images/banner2.webp" alt="Los Angeles" class="d-block w-100" />
                         </div>
-                        <div class="carousel-item">
+                        <div className="carousel-item">
                             <img src="./images/banner1.webp" alt="Chicago" class="d-block w-100" />
                         </div>
-                        <div class="carousel-item">
+                        <div className="carousel-item">
                             <img src="./images/banner3.webp" alt="New York" class="d-block w-100" />
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel1" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
+                    <button className="carousel-control-prev" type="button" data-bs-target="#carousel1" data-bs-slide="prev">
+                        <span className="carousel-control-prev-icon"></span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carousel1" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
+                    <button className="carousel-control-next" type="button" data-bs-target="#carousel1" data-bs-slide="next">
+                        <span className="carousel-control-next-icon"></span>
                     </button>
                 </div>
             </div>
@@ -158,7 +166,7 @@ const HomePages = () => {
             {/* banner */}
             <br />
             <div>
-                <img src="./images/banner.webp" alt="Chicago" class="d-block w-100" style={{ height: "450px" }} />
+                <img src="./images/banner.webp" alt="Chicago" className="d-block w-100" style={{ height: "450px" }} />
             </div>
             <br />
             <div>
@@ -213,7 +221,7 @@ const HomePages = () => {
                     </div>
                 </div>
             </div>
-            <ToastContainer></ToastContainer>
+            <ToastContainer containerId="toast7"/>
         </>
     );
 };

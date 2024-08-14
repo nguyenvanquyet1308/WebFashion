@@ -69,6 +69,11 @@ const Product = () => {
     };
     const handleAddCart = async (productId) => {
      //   if (!customer) return null;
+     if (customer == undefined) {
+        navigate("/product")
+        toast.warning("Bạn cần đăng nhập để sử dụng Cart !")
+        return
+       };
         console.log("dataa customer" + customer);
         console.log(customer.customerId);
         try {
@@ -87,34 +92,9 @@ const Product = () => {
             toast.error("Lỗi thêm sản phẩm")
         }
     }
-
-
-    // useEffect(() => {
-    //     const handleFilters = async (page) => {
-    //         try {
-    //             const response = await axios.get("http://localhost:8080/api/product/searchName", {
-    //                 params: {
-    //                     page: page,
-    //                     pageSize: pageSize,
-    //                     keywords: keywords
-    //                 }
-    //             })
-    //             setProducts(response.data.content);
-    //             setTotalPages(response.data.totalPages);
-    //             console.log("dữ liệu : " + response.data);
-    //         } catch (error) {
-    //             console.log("lỗi tìm kiếm theo keyword: ", error);
-    //         }
-    //     }
-    //     handleFilters(currentPage);
-
-    // }, [currentPage])
-
-   
-
+    
     return (
         <>
-
             <div class="row">
                 <div class="form-group mt-2 ">
                     <img src="./images/banner.jpg" class="image-banner" alt="" />
@@ -215,7 +195,7 @@ const Product = () => {
                     activeClassName='active'
                 />
             </div>
-            <ToastContainer></ToastContainer>
+            <ToastContainer containerId="toast3"/>
 
         </>
     )
