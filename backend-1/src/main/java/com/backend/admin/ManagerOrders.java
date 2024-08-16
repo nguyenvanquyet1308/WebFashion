@@ -96,8 +96,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 		    Orders item = orders.get();
 		    item.setStatus(true);
 		    System.out.println(item);
+		    ordersdao.save(item);
+		    List<Orders> itemOrders = ordersdao.findAll();
 		    
-		    return ResponseEntity.ok(ordersdao.save(item));
+		    return ResponseEntity.ok(itemOrders);
 			
 		}
 

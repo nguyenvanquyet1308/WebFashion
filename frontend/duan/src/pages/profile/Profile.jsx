@@ -11,8 +11,9 @@ const Profile = () => {
     const [password, setPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState({})
 
-    const {userInfo} = useAuthStore();
+    const { userInfo } = useAuthStore();
     const customer = userInfo.data;
 
     useEffect(() => {
@@ -21,11 +22,12 @@ const Profile = () => {
             navigate("/login");
         }
     }, [customer, navigate]);
-    const resetForm  = () =>{
+    const resetForm = () => {
         setPassword("")
         setNewPassword("")
         setConfirmPassword("")
     }
+    
     const handleUpdatePassword = async (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
@@ -52,7 +54,7 @@ const Profile = () => {
                 toast.error("Mật khẩu không đúng!");
             } else {
                 toast.error("Có lỗi xảy ra!");
-            }   
+            }
         }
     };
     if (!customer) return null;
@@ -89,7 +91,7 @@ const Profile = () => {
                     </form>
                 </div>
             </div>
-      <ToastContainer containerId="toast2" />
+            <ToastContainer containerId="toast2" />
         </div>
     );
 };

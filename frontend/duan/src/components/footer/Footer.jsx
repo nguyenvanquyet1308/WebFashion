@@ -34,7 +34,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="text-center p-3" style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
-          <TruncateText text={" © 2023 Copyright"} maxLength = {50} />     
+          <TruncateText text={" © 2023 Nguyen Van Quyet"} maxLength = {50} />     
             </div>
         </footer>
     );

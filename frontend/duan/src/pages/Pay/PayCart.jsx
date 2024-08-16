@@ -34,7 +34,7 @@ const PayCart = () => {
             })
             toast.success("Thanh toán thành công !")
             console.log(response.data);
-            // setOrders(response.data);
+            setOrders(response.data);
         } catch (error) {
             console.log("lỗi thanh toán: ", error);
             toast.error("Bạn cần thêm sản phẩm vào giỏ hàng để thanh toán !")

@@ -163,7 +163,7 @@ public class LoginController {
 				//jwtCookie.setHttpOnly(true);
 				jwtCookie.setSecure(true); 
 				jwtCookie.setPath("/");
-				jwtCookie.setMaxAge(10 * 60);
+				jwtCookie.setMaxAge(20 * 60);
 				response.addCookie(jwtCookie);
 				CustomerResponse customerResponse = new CustomerResponse(itemCustomer.getCustomerId(),
 						itemCustomer.getRegisteredDate(), token, itemCustomer.getPhone(), itemCustomer.getUsername(),
@@ -187,9 +187,7 @@ public class LoginController {
 	@PostMapping("/register")
 	public ResponseEntity<?> Register(@RequestBody Customer customer) {
 		Customer item = customerDAO.save(customer);
-
 		return ResponseEntity.ok(item);
-
 	}
 	@GetMapping("/checkEmail/{email}")
 	public ResponseEntity<String> checkEmail(@PathVariable("email") String email) {

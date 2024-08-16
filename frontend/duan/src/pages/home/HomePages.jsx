@@ -73,7 +73,9 @@ const HomePages = () => {
         try {
             await axios.post('http://localhost:8080/api/user/cart/add', {
                 product: { productId: parseInt(productId) },
-                quantity: parseInt(quantity),
+                quantity: parseInt(
+                    
+                ),
                 customer: { customerId: customer.customerId }
             }, {
                 headers: { 'Content-Type': 'application/json' },
@@ -87,7 +89,6 @@ const HomePages = () => {
             toast.error("Lỗi thêm sản phẩm")
         }
     }
- 
     return (
         <>
             <div>

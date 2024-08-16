@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import "./ManageStatistical.scss"
 import axios from "axios";
+import { format } from 'date-fns';
+import { formatCurrency } from "services/FormatCurrency";
+
 
 const MangageStatistical = () => {
 
@@ -64,32 +67,34 @@ const MangageStatistical = () => {
 
     const SumAmountBetweenDates = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/admin/countOrdersByFalse", {
+            const formatStartDate = format(new Date(startDate), 'dd/MM/yyyy');
+            const formatEndDate = format(new Date(endDate), 'dd/MM/yyyy');
+    
+            const response = await axios.get("http://localhost:8080/api/admin/sumAmountBetweenDates", {
                 params: {
-                    startDate: startDate,
-                    endDate: endDate
+                    startDate: formatStartDate,
+                    endDate: formatEndDate
                 }
-            })
-
-            setAmountBetweenDates(response.data)
-            console.log(response.data);
+            });
+            console.log("số lượng", response.data);
+            setAmountBetweenDates(response.data);
         } catch (error) {
             console.log("lỗi: " + error);
         }
-    }
+    };
 
     return (<>
         <div className="QLThongKe mt-5">
             <div className="row">
                 <div className="col-sm-4">
                     <div className="thongke">
-                        <p>Tổng người dùng</p>
+                        <p className="textP">Tổng người dùng</p>
                         <strong>{countCustomer}</strong>
                     </div>
                 </div>
                 <div className="col-sm-4">
                     <div className="thongke">
-                        <p>Tổng Đơn Hàng</p>
+                        <p className="textP">Tổng Đơn Hàng</p>
                         <strong>{countOrders}</strong>
                     </div>
                 </div>
@@ -97,11 +102,11 @@ const MangageStatistical = () => {
                     <div className="thongke">
                         <div className="row">
                             <div className="col-sm-6">
-                                <p>Tổng đơn đã giao</p>
+                                <p className="textP" > Tổng đơn đã giao</p>
                                 <strong>{countOrderByTrue}</strong>
                             </div>
                             <div className="col-sm-6">
-                                <p>Tổng đơn chưa giao</p>
+                                <p className="textP">Tổng đơn chưa giao</p>
                                 <strong>{countOrderByFalse}</strong>
                             </div>
                         </div>
@@ -120,7 +125,7 @@ const MangageStatistical = () => {
                             <br /><br />
                             <div className="doanhthu">
                                 <strong>Doanh Thu: </strong> <br />
-                                <strong>{AmountBetweenDates}</strong>
+                                <strong>{formatCurrency(AmountBetweenDates)}</strong>
                             </div>
                         </div>
                     </div>

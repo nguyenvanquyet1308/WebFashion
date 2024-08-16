@@ -80,11 +80,8 @@ public class CartController {
 			cartDao.save(cartItem);
 			System.out.println("thêm sp thnafh công");
 			return new ResponseEntity<>("Thêm sản phẩm vào giỏ hàng thành công", HttpStatus.CREATED);
-
 		}
-
 	}
-
 	@PutMapping("/updateQuantity")
 	public ResponseEntity<String> updateQuantity(@RequestBody CartItem cartItem) {
 		Optional<CartItem> cartItemOptional = cartDao.findById(cartItem.getId());
@@ -137,8 +134,16 @@ public class CartController {
 				System.out.println("Giỏ hàng rỗng");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Giỏ hàng rỗng");
 			}
+			double totalAmount = 0;
+
+			for (CartItem item : items) {
+				double itemTotal = item.getQuantity() * item.getProduct().getUnitPrice();
+			    totalAmount += itemTotal;
+			}
 			Orders order = new Orders();
-			order.setAmount(items.get(0).getQuantity() * items.get(0).getProduct().getUnitPrice());
+			order.setAmount(totalAmount);
+//			order.setAmount(items.get(0).getQuantity() * items.get(0).getProduct().getUnitPrice());
+			System.out.println();
 			order.setCustomer(customer);
 			order.setOrderDate(new Date());
 			order.setStatus(false);
@@ -157,7 +162,7 @@ public class CartController {
 				orderDetailDAO.save(orderdetail);
 			}
 			cartDao.deleteAll();
-			return ResponseEntity.ok(customer);
+			return ResponseEntity.ok(ordersdao.findByCustomerCustomerId(customer.getCustomerId()));
 		} catch (Exception e) {
 			System.out.println("lỗi" + e);
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token không hợp lệ");

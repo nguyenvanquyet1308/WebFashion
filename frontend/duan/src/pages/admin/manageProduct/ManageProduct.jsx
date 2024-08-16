@@ -2,11 +2,43 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './ManageProduct.scss';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
 const ManageProduct = () => {
     const [products, setProducts] = useState([]);
     const [categorys, setCategorys] = useState([]);
     const [editProductId, setEditProductId] = useState(null);
+    const [error, setError] = useState({})
+
+    const validate = () => {
+        const checkError = {};
+
+        if (!addProducts.name.trim()) {
+            checkError.name = "Vui lòng điền tên sản phẩm !";
+        }
+
+        if (!addProducts.quantity || addProducts.quantity <= 0) {
+            checkError.quantity = "Số lượng phải là một số > 0";
+        }
+
+        if (!addProducts.unitPrice || addProducts.unitPrice <= 0) {
+            checkError.unitPrice = "Đơn giá phải là một số > 0";
+        }
+        if (!addProducts.image) {
+            checkError.image = "Vui lòng chọn hình ảnh !";
+        }
+        if (!addProducts.description.trim()) {
+            checkError.description = "Vui lòng điền mô tả sản phẩm !";
+        }
+
+        if (!addProducts.discount || addProducts.discount < 0 || addProducts.discount > 100) {
+            checkError.discount = "Giảm giá phải nằm trong khoảng 0-100%";
+        }
+        setError(checkError);
+        return Object.keys(checkError).length === 0;
+    };
+
+
     const [addProducts, setAddProduct] = useState({
         name: '',
         quantity: '',
@@ -21,7 +53,7 @@ const ManageProduct = () => {
             name: ""
         }
     });
-   
+
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -42,19 +74,28 @@ const ManageProduct = () => {
         console.log(selectedCategory);
     };
 
+
     const handleAddNewProducts = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post("http://localhost:8080/api/admin/products/add", addProducts, {
-                headers: { "Content-Type": "application/json" },
-            });
-            const newProduct = response.data;
-            setProducts([...products, newProduct]);
-            resetForm();
-            console.log("thành công " + newProduct);
-        } catch (error) {
-            console.log("lỗi " + error);
+        if (validate()) {
+            e.preventDefault();
+            try {
+                const response = await axios.post("http://localhost:8080/api/admin/products/add", addProducts, {
+                    headers: { "Content-Type": "application/json" },
+                });
+                const newProduct = response.data;
+                setProducts([...products, newProduct]);
+                resetForm();
+                console.log("thành công " + newProduct);
+                toast.success("Thêm sản phẩm thành công")
+            } catch (error) {
+                console.log("lỗi " + error);
+            }
         }
+        else{
+            toast.warning("Cần điền đầy đủ các thông tin !")
+
+        }
+
     };
 
     const resetForm = () => {
@@ -76,20 +117,25 @@ const ManageProduct = () => {
     };
 
     const handleUpdate = async (e) => {
-        e.preventDefault();
-        try {
-            const response  =  await axios.put(`http://localhost:8080/api/admin/products/update/${editProductId}`, addProducts, {
-                headers: { "Content-Type": "application/json" }
-            });
-            const updatedProducts = products.map(product => 
-                product.productId === editProductId ? { ...product, ...addProducts } : product
-            );
-            setProducts(updatedProducts);
-            resetForm();
-            console.log("Cập nhật thành công");
-        } catch (error) {
-            console.log("Lỗi cập nhật sản phẩm " + error);
+        if (validate()) {
+            e.preventDefault();
+            try {
+                const response = await axios.put(`http://localhost:8080/api/admin/products/update/${editProductId}`, addProducts, {
+                    headers: { "Content-Type": "application/json" }
+                });
+                const updatedProducts = products.map(product =>
+                    product.productId === editProductId ? { ...product, ...addProducts } : product
+                );
+                setProducts(updatedProducts);
+                resetForm();
+                console.log("Cập nhật thành công");
+            } catch (error) {
+                console.log("Lỗi cập nhật sản phẩm " + error);
+            }
+        }else{
+            toast.warning("Cần điền đầy đủ các thông tin !")
         }
+
     };
 
     const handleEdit = (product) => {
@@ -142,22 +188,32 @@ const ManageProduct = () => {
                         <div className="form-group">
                             <label htmlFor="productName">Tên sản phẩm</label>
                             <input type="text" value={addProducts.name} onChange={handleInputChange} className="form-control" name='name' />
+                            {error.name && <span className="text-danger">{error.name}</span>}
+
                         </div>
                         <div className="form-group">
                             <label htmlFor="quantity">Số lượng</label>
                             <input type="number" value={addProducts.quantity} onChange={handleInputChange} className="form-control" name='quantity' />
+                            {error.quantity && <span className="text-danger">{error.quantity}</span>}
+
                         </div>
                         <div className="form-group">
                             <label htmlFor="unitPrice">Đơn giá</label>
                             <input type="number" value={addProducts.unitPrice} onChange={handleInputChange} className="form-control" name='unitPrice' />
+                            {error.unitPrice && <span className="text-danger">{error.unitPrice}</span>}
+
                         </div>
                         <div className="form-group">
                             <label htmlFor="description">Mô tả</label>
                             <textarea value={addProducts.description} onChange={handleInputChange} className="form-control" name='description' ></textarea>
+                            {error.description && <span className="text-danger">{error.description}</span>}
+
                         </div>
                         <div className="form-group">
                             <label htmlFor="discount">Giảm giá (%)</label>
                             <input type="number" value={addProducts.discount} onChange={handleInputChange} className="form-control" name='discount' />
+                            {error.discount && <span className="text-danger">{error.discount}</span>}
+
                         </div>
                         <div className="form-group">
                             <label htmlFor="category">Danh mục</label>
@@ -176,6 +232,8 @@ const ManageProduct = () => {
                         <div className="form-group">
                             <label>Hình ảnh</label>
                             <input type="file" onChange={handleFileChange} className="form-control" name='image' />
+                            {error.image && <span className="text-danger">{error.image}</span>}
+
                         </div>
                     </div>
                 </div>
@@ -207,7 +265,7 @@ const ManageProduct = () => {
                                 <td>{product.discount}</td>
                                 <td>{product.createDate}</td>
                                 <td>{product.category.name}</td>
-                                <td><img src={`http://localhost:8080/getimage/${product.image}`} alt="" style={{height: "100px",width: "100px"}} /></td>
+                                <td><img src={`http://localhost:8080/getimage/${product.image}`} alt="" style={{ height: "100px", width: "100px" }} /></td>
                                 <td>
                                     <button className='btn btn-danger' onClick={() => handleDelete(product.productId)}>Delete</button>
                                     <button onClick={() => handleEdit(product)} className='btn btn-primary ms-2'>Edit</button>
@@ -217,6 +275,7 @@ const ManageProduct = () => {
                     </tbody>
                 </table>
             </div>
+            <ToastContainer containerId="toast13" />
         </>
     );
 };

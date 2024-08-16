@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { formatCurrency } from "services/FormatCurrency";
 
 const ManageOrders = () => {
@@ -19,9 +20,31 @@ const ManageOrders = () => {
         showOrders()
     }, [])
 
+    const handleUpdateStatus = async (orderId) => {
+        try {
+            const response = await axios.put(`http://localhost:8080/api/updateStatusOrders/${orderId}`)
+            setOrders(response.data)
+            console.log("update xac nhan don: ", response.data);
+            toast.success("Xác nhận đơn hàng thành công !")
+        } catch (error) {
+            console.log("lỖi khi xác nhận đơn: ", error);
+        }
+    }
+    const handleDeleteOrders = async (orderId) => {
+        try {
+             await axios.delete(`http://localhost:8080/api/orders/${orderId}`)
+             setOrders(orders.filter(order => order.orderId != orderId ))
+             toast.success("Xóa thành công !")
+        } catch (error) {
+            console.log("err xóa",error);
+            
+            
+        }
+    }
+
     return (
         <>
-            <div> 
+            <div>
                 <table className="table table-bordered">
                     <thead>
                         <tr>
@@ -30,7 +53,6 @@ const ManageOrders = () => {
                             <th>Amount</th>
                             <th>Status</th>
                             <th>Customer Name</th>
-
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -42,12 +64,20 @@ const ManageOrders = () => {
                                 <td>  {formatCurrency(order.amount)}</td>
                                 <td>{order.status ? "Đã Giao hàng" : "Chưa giao hàng"}</td>
                                 <td>{order.customer.username}</td>
-                                <td><button className="btn btn-dark">Xác nhận đơn</button></td>
+                                <td>
+                                    {!order.status ? (
+                                        <button className="btn btn-dark" onClick={() => handleUpdateStatus(order.orderId)}>Xác nhận đơn</button>
+                                    ) : (
+                                        <button className="btn btn-danger " onClick={(e) => handleDeleteOrders(order.orderId)} >Xóa</button>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+        <ToastContainer containerId="toast12" />
+
         </>
     )
 }
